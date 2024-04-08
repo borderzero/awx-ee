@@ -49,5 +49,24 @@ jobs:
             --platform=linux/amd64 \
             -t ghcr.io/${{ github.repository_owner }}/awx-ee:${RELEASE} \
             -t ghcr.io/${{ github.repository_owner }}/awx-ee:${BRANCH} \
+            --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
+            --label "org.opencontainers.image.description=Border0 AWX Execution Environment" \
             --push context
           docker buildx ls
+
+
+  clean-ghcr:
+    name: Delete old container images
+    needs: [build_and_push]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clear out old borderzero/border0 GHCR registry images
+        uses: snok/container-retention-policy@v2
+        with:
+          image-names: awx-ee
+          cut-off: 1 month ago UTC
+          account-type: org
+          org-name: borderzero
+          keep-at-least: 1
+          skip-tags: latest
+          token: ${{ secrets.GITHUB_TOKEN }}
