@@ -1,0 +1,26 @@
+name: Clean GHCR.io images
+run-name: Clean GHCR.io images
+
+on:
+  workflow_dispatch:
+
+permissions:
+    id-token: write
+    contents: read
+    packages: write
+
+jobs:
+  clean-ghcr:
+    name: Delete old GHCR.io container images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clear out old GHCR.io borderzero/border0 registry images
+        uses: snok/container-retention-policy@v2
+        with:
+          image-names: awx-ee
+          cut-off: 3 months ago UTC
+          account-type: org
+          org-name: borderzero
+          keep-at-least: 100
+          skip-tags: latest
+          token: ${{ secrets.GITHUB_TOKEN }}
