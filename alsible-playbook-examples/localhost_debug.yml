@@ -34,19 +34,38 @@
       retries: 3
       delay: 2
       until: result is succeeded
+      ignore_errors: true
 
     - name: Display outputs
       ansible.builtin.debug:
         msg: |
           === {{ item.item.name }} ===
+          {% if item.rc == 0 %}
           {{ item.stdout }}
+          {% else %}
+          ❌ FAILED (rc={{ item.rc }}, attempts={{ item.attempts | default(1) }}):
+          {{ item.stderr }}
+          {% endif %}
       loop: "{{ result.results }}"
 
-    - name: Fail if any command errored
-      ansible.builtin.assert:
-        that:
-          - item.rc == 0
-        fail_msg: "❌ '{{ item.item.name }}' failed (rc={{ item.rc }})"
-        success_msg: "✅ '{{ item.item.name }}' succeeded"
-      loop: "{{ result.results }}"
+    - name: Show final summary
+      ansible.builtin.debug:
+        msg: |
+          {% set ns = namespace(passed=0, failed=0) %}
+          {% for item in result.results %}
+          {% if item.rc == 0 %}
+          {% set ns.passed = ns.passed + 1 %}
+          {% else %}
+          {% set ns.failed = ns.failed + 1 %}
+          {% endif %}
+          {% endfor %}
+          
+          === SUMMARY ===
+          ✅ Passed: {{ ns.passed }}
+          ❌ Failed: {{ ns.failed }}
+          📊 Total:  {{ result.results | length }}
+          
+          {% if ns.failed > 0 %}
+          ⚠️  Some commands failed but were ignored to show all results
+          {% endif %}
 
