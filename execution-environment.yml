@@ -44,7 +44,7 @@ dependencies:
     gcc [platform:rpm compile]
     gcc-c++ [platform:rpm compile]
     make [platform:rpm compile]
-    iproute2 [platform:rpm compile]
+    iproute [platform:rpm compile]
     iptables [platform:rpm compile]
     openssl-devel [platform:rpm compile]
   python: |
