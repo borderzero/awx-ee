@@ -11,15 +11,29 @@
       - { name: "/etc/hosts contents",       cmd: "cat /etc/hosts" }
       - { name: "/tmp/border0.log contents",       cmd: "cat /tmp/border0_status.log" }
       - { name: "/tmp/border0_status.log contents",       cmd: "cat /tmp/border0_status.log" }
-      - { name: "Border0 node start",        cmd: "border0 node start --start-vpn" }
+      # - { name: "Border0 node start",        cmd: "border0 node start --start-vpn" }
 
   tasks:
+
+    - name: Start Border0 node in background
+      ansible.builtin.shell: "nohup border0 node start --start-vpn > /tmp/border0_background.log 2>&1 &"
+      async: 10
+      poll: 0
+      register: border0_job
+
+    - name: Kill Border0 background process
+      ansible.builtin.shell: "pkill -f 'border0 node start'"
+      ignore_errors: true
+
     - name: Run all diagnostic commands
       ansible.builtin.command: "{{ item.cmd }}"
       register: result
       loop: "{{ cmds }}"
       loop_control:
         label: "{{ item.name }}"
+      retries: 3
+      delay: 2
+      until: result is succeeded
 
     - name: Display outputs
       ansible.builtin.debug:
@@ -35,3 +49,4 @@
         fail_msg: "❌ '{{ item.item.name }}' failed (rc={{ item.rc }})"
         success_msg: "✅ '{{ item.item.name }}' succeeded"
       loop: "{{ result.results }}"
+
