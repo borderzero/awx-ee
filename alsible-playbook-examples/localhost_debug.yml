@@ -1,0 +1,35 @@
+---
+- name: Check local networking and Border0 peers
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    cmds:
+      - { name: "Border0 peer debug",        cmd: "border0 node debug peers" }
+      - { name: "IP address (detailed)",     cmd: "ip -s -d address show" }
+      - { name: "IP route (detailed)",       cmd: "ip -s -d route" }
+      - { name: "/etc/hosts contents",       cmd: "cat /etc/hosts" }
+
+  tasks:
+    - name: Run all diagnostic commands
+      ansible.builtin.command: "{{ item.cmd }}"
+      register: result
+      loop: "{{ cmds }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Display outputs
+      ansible.builtin.debug:
+        msg: |
+          === {{ item.item.name }} ===
+          {{ item.stdout }}
+      loop: "{{ result.results }}"
+
+    - name: Fail if any command errored
+      ansible.builtin.assert:
+        that:
+          - item.rc == 0
+        fail_msg: "❌ '{{ item.item.name }}' failed (rc={{ item.rc }})"
+        success_msg: "✅ '{{ item.item.name }}' succeeded"
+      loop: "{{ result.results }}"
