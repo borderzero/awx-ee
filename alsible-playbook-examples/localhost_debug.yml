@@ -10,6 +10,8 @@
       - { name: "IP address (detailed)",     cmd: "ip -s -d address show" }
       - { name: "IP route (detailed)",       cmd: "ip -s -d route" }
       - { name: "/etc/hosts contents",       cmd: "cat /etc/hosts" }
+      - { name: "/tmp/border0.log contents",       cmd: "cat /tmp/border0_status.log" }
+      - { name: "/tmp/border0_status.log contents",       cmd: "cat /tmp/border0_status.log" }
 
   tasks:
     - name: Run all diagnostic commands
