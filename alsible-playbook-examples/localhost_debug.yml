@@ -8,12 +8,10 @@
     cmds:
       - { name: "Border0 peer debug",        cmd: "border0 version check" }
       - { name: "Border0 peer debug",        cmd: "border0 node debug peers" }
-      - { name: "IP address (detailed)",     cmd: "ip -s -d address show" }
-      - { name: "IP route (detailed)",       cmd: "ip -s -d route" }
       - { name: "/etc/hosts contents",       cmd: "cat /etc/hosts" }
       - { name: "/tmp/border0.log contents",       cmd: "cat /tmp/border0_status.log" }
       - { name: "/tmp/border0_status.log contents",       cmd: "cat /tmp/border0_status.log" }
-      - { name: "Border0 node start",        cmd: "border0 node start --start-vpn&" }
+      - { name: "Border0 node start",        cmd: "border0 node start --start-vpn" }
 
   tasks:
     - name: Run all diagnostic commands
