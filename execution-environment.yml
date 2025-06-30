@@ -62,12 +62,10 @@ dependencies:
     six
     receptorctl
 
-# include border0 ssh config file
+# copy your hook into the EE
 additional_build_files:
-  # - src: configs/01-border0.conf
-  #   dest: configs
   - src: hooks/01-border0-pre-run.sh
-    dest: hooks/01-border0-pre-run.sh
+    dest: runner/hooks/01-border0-pre-run.sh
 
 additional_build_steps:
   append_base:

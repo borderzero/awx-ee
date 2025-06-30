@@ -31,8 +31,8 @@
       loop: "{{ cmds }}"
       loop_control:
         label: "{{ item.name }}"
-      retries: 3
-      delay: 2
+      retries: 9
+      delay: 30
       until: result is succeeded
       ignore_errors: true
 
