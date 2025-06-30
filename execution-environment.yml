@@ -73,7 +73,7 @@ additional_build_steps:
   append_final:
   # Install border0 binary
     - ADD https://download.border0.com/linux_amd64/border0 /bin/border0
-    - COPY _build/hooks/01-border0-pre-run.sh /runner/hooks/01-border0-pre-run.sh
+    # - COPY _build/hooks/01-border0-pre-run.sh /runner/hooks/01-border0-pre-run.sh
     - RUN chmod +x /bin/border0
     - RUN chmod +x /runner/hooks/01-border0-pre-run.sh
     # defaults
