@@ -1,6 +1,7 @@
 # plugins/pre_hook.py
 from ansible.plugins.callback import CallbackBase
 import subprocess
+import os
 
 class CallbackModule(CallbackBase):
     CALLBACK_VERSION   = 2.0
@@ -10,8 +11,18 @@ class CallbackModule(CallbackBase):
     def v2_playbook_on_start(self, playbook):
         # this runs once before any plays/tasks
         self._display.banner("▶️  [pre_hook] Starting Border0 VPN…")
-        subprocess.run(
+        
+        # Set up environment with debug logging
+        env = os.environ.copy()
+        env['BORDER0_LOG_LEVEL'] = 'debug'
+        
+        # Open log file for capturing border0 output
+        log_file = open('/tmp/border0.log', 'w')
+        
+        subprocess.Popen(
             ['/bin/border0', 'node', 'start', '--start-vpn'],
-            check=True,
+            env=env,
+            stdout=log_file,
+            stderr=subprocess.STDOUT,
         )
-        self._display.banner("✅  [pre_hook] VPN up, continuing…")
+        self._display.banner("✅  [pre_hook] VPN starting in background, logs at /tmp/border0.log")
