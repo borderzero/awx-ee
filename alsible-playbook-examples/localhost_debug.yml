@@ -56,3 +56,7 @@
           ⚠️  Some commands failed but were ignored to show all results
           {% endif %}
 
+# sleep 10 min 
+    - name: Run all diagnostic commands
+      ansible.builtin.command: "sleep 600"
+    - 
