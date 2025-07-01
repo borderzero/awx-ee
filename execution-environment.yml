@@ -68,9 +68,12 @@ dependencies:
     receptorctl
 
 # copy your hook into the EE
-# additional_build_files:
-#   - src: hooks/pre_run.sh
-#     dest: hooks
+additional_build_files:
+  - src: hooks/pre_run.sh
+    dest: hooks
+  - src: scripts/entrypoint.sh
+    dest: scripts
+
 
 additional_build_steps:
   append_base:
@@ -78,11 +81,13 @@ additional_build_steps:
   append_final:
   # Install border0 binary
     - ADD https://download.border0.com/linux_amd64/border0 /bin/border0
-    # - RUN mkdir /runner/hooks
-    # - COPY _build/hooks/pre_run.sh /runner/hooks/pre_run.sh
+    - RUN mkdir -p /usr/local/bin
+    - COPY _build/hooks/pre_run.sh /usr/local/bin/pre_run.sh
+    - COPY _build/scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
     - RUN chmod +x /bin/border0
-    # - RUN chmod +x /runner/hooks/pre_run.sh
+    - RUN chmod +x /usr/local/bin/*
     # defaults
     - COPY --from=quay.io/ansible/receptor:devel /usr/bin/receptor /usr/bin/receptor
     - RUN mkdir -p /var/run/receptor
     - RUN git lfs install --system
+    - ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
