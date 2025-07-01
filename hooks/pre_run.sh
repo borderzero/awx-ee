@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Ensure the AWX-injected secret is present
 if [ -z "${BORDER0_TOKEN:-}" ]; then
-  echo "ERROR: BORDER0_TOKEN is not set" >&2
+  echo "ERROR: BORDER0_TOKEN is not set"
 #   exit 1
 fi
 
@@ -13,7 +13,7 @@ export BORDER0_TOKEN
 # Call the border0 binary (it will pick up $BORDER0_TOKEN)
 echo "[pre_run] invoking border0…"
 if ! /bin/border0; then
-  echo "ERROR: border0 failed" >&2
+  echo "ERROR: border0 failed"
 #   exit 1
 fi
 
