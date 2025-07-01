@@ -15,6 +15,7 @@ class CallbackModule(CallbackBase):
         # Set up environment with debug logging
         env = os.environ.copy()
         env['BORDER0_LOG_LEVEL'] = 'debug'
+        env['BORDER0_VERY_VERBOSE'] = 'true'
         
         # Open log file for capturing border0 output
         log_file = open('/tmp/border0.log', 'w')
