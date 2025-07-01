@@ -58,5 +58,4 @@
 
 # sleep 10 min 
     - name: Run all diagnostic commands
-      ansible.builtin.command: "sleep 600"
-    - 
+      ansible.builtin.command: "sleep 1800"
