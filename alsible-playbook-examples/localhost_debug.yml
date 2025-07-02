@@ -1,7 +1,6 @@
 ---
 - name: Check local networking and Border0 peers
-  hosts: localhost
-  connection: local
+  hosts: all
   gather_facts: false
 
   vars:
